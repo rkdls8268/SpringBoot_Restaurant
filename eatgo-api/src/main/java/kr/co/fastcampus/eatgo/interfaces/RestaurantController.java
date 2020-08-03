@@ -1,5 +1,6 @@
 package kr.co.fastcampus.eatgo.interfaces;
 
+import kr.co.fastcampus.eatgo.application.RestaurantService;
 import kr.co.fastcampus.eatgo.domain.MenuItem;
 import kr.co.fastcampus.eatgo.domain.MenuItemRepository;
 import kr.co.fastcampus.eatgo.domain.Restaurant;
@@ -14,27 +15,21 @@ import java.util.List;
 @RestController // RestController도 Component의 일종 // 우리가 RestaurantController 인스턴스를 만들어준 적은 없지만 작동했던 이유는 Spring이 이를 직접 관리헀기 때문
 public class RestaurantController {
 
-    @Autowired // 컨트롤러를 만들어줄 때 Spring이 알아서 RestaurantRepository 생성해줌.
-    private RestaurantRepository restaurantRepository;
-
     @Autowired
-    private MenuItemRepository menuItemRepository;
+    private RestaurantService restaurantService;
 
     @GetMapping("/restaurants")
     public List<Restaurant> list() {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantService.getRestaurants();
 
         return restaurants;
     }
 
     @GetMapping("/restaurants/{id}") // 바뀔 수 있는 요소 {id} 로 활용
     public Restaurant detail(@PathVariable("id") Long id) {
-//        List<Restaurant> restaurants = repository.findAll();
-        Restaurant restaurant = restaurantRepository.findById(id);
-
-        List<MenuItem> menuItems = menuItemRepository.findAllByRestaurantId(id);
-        // 메뉴 아이템 추가
-        restaurant.setMenuItems(menuItems);
+        Restaurant restaurant = restaurantService.getRestaurantById(id);
+        // 기본 정보 + 메뉴 정보
+        // 아래의 복잡한 처리들이 한꺼번에 일어나는 새로운 객체 개념
 
         return restaurant;
     }
