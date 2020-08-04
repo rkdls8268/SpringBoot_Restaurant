@@ -6,10 +6,11 @@ import kr.co.fastcampus.eatgo.domain.MenuItemRepository;
 import kr.co.fastcampus.eatgo.domain.Restaurant;
 import kr.co.fastcampus.eatgo.domain.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController // RestController도 Component의 일종 // 우리가 RestaurantController 인스턴스를 만들어준 적은 없지만 작동했던 이유는 Spring이 이를 직접 관리헀기 때문
@@ -32,5 +33,21 @@ public class RestaurantController {
         // 아래의 복잡한 처리들이 한꺼번에 일어나는 새로운 객체 개념
 
         return restaurant;
+    }
+
+    /*
+    * 입력 시 content로 넘겨준 내용을 @RequestBody 이용하여 받을 수 있음.
+    * */
+
+    @PostMapping("/restaurants")
+    public ResponseEntity<?> create(@RequestBody Restaurant resource) throws URISyntaxException {
+        // 이 둘은 외부에서 얻어올 것.
+        String name = resource.getName();
+        String address = resource.getAddress();
+        Restaurant restaurant = new Restaurant(1234L, name, address);
+        restaurantService.addRestaurant(restaurant);
+
+        URI location = new URI("/restaurants/" + restaurant.getId());
+        return ResponseEntity.created(location).body("{}");
     }
 }

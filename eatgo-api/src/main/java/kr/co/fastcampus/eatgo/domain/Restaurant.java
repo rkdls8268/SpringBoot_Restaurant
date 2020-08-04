@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Restaurant {
-    private final String name;
-    private final String address;
-    private final Long id;
+    private String name;
+    private String address;
+    private Long id;
     private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+
+    // 기본 생성자 생성해주면서 final 제거
+    public Restaurant() {
+    }
 
     public Restaurant(Long id, String name, String address) {
         this.id = id;

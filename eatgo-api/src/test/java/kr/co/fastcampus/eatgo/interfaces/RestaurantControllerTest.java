@@ -4,10 +4,12 @@ import kr.co.fastcampus.eatgo.application.RestaurantService;
 import kr.co.fastcampus.eatgo.domain.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,10 +17,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // JUnit5 에서는 RunWith 대신 ExtendWith 사용
 @ExtendWith(SpringExtension.class)
@@ -86,5 +89,19 @@ public class RestaurantControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"Cyber food\"")
                 ));
+    }
+
+    @Test
+    public void create() throws Exception {
+        Restaurant restaurant = new Restaurant(1234L, "BeRyong", "Busan");
+        mvc.perform(MockMvcRequestBuilders.post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
+                .content("{\"name\":\"BeRyong\", \"address\":\"Busan\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "/restaurants/1234"))
+                .andExpect(content().string("{}"));
+
+        verify(restaurantService).addRestaurant(ArgumentMatchers.any());
+        // 제대로 된 객체만 넣으면 실행되게 처리
     }
 }
