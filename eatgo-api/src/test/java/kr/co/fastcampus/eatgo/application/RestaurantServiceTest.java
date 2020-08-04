@@ -12,6 +12,7 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 // 일반적인 테스트에서는 의존 관계 주입 못함.
@@ -51,6 +52,8 @@ public class RestaurantServiceTest {
         given(restaurantRepository.findAll()).willReturn(restaurants);
 
         given(restaurantRepository.findById(1004L)).willReturn(restaurant);
+
+        given(restaurantRepository.save(any())).willReturn(restaurant);
     }
 
     @Test
@@ -66,5 +69,18 @@ public class RestaurantServiceTest {
         List<Restaurant> restaurants = restaurantService.getRestaurants();
         Restaurant restaurant = restaurants.get(0);
         assertThat(restaurant.getId(), is(1004L));
+    }
+
+    @Test
+    public void addRestaurants() {
+        // 임의로 데이터를 넣고 있지만 id 같은 경우 적어놓지 않아도 알아서 들어갔으면 좋겠다!
+        // id 값 삭제 -> 2개의 인자값만 가지는 생성자 만들어주기
+        Restaurant restaurant = new Restaurant("BeRyong", "Busan");
+        Restaurant saved = new Restaurant(1234L,"BeRyong", "Busan");
+
+        given(restaurantRepository.save(any())).willReturn(saved);
+
+        Restaurant created = restaurantService.addRestaurant(restaurant);
+        assertThat(created.getId(), is(1234L));
     }
 }

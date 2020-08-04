@@ -39,6 +39,8 @@ public class RestaurantService {
         return restaurants;
     }
 
-    public void addRestaurant(Restaurant restaurant) {
+    public Restaurant addRestaurant(Restaurant restaurant) {
+        restaurant.setId(1234L);
+        return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
     }
 }
