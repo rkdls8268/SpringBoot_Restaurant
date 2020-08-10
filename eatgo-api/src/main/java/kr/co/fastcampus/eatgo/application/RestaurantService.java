@@ -40,7 +40,10 @@ public class RestaurantService {
     }
 
     public Restaurant addRestaurant(Restaurant restaurant) {
-        restaurant.setId(1234L);
-        return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
+        Restaurant saved = restaurantRepository.save(restaurant);
+        return saved;
+        // 위 두 줄 return restaurantRepository.save(restaurant); 와 같이 한 줄로도 가능
+//        restaurant.setId(1234L);
+//        return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
     }
 }

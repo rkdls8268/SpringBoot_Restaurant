@@ -72,7 +72,7 @@ public class RestaurantServiceTest {
     }
 
     @Test
-    public void addRestaurants() {
+    public void addRestaurants() { // 강의에는 addRestaurant라고 되어 있음.
         // 임의로 데이터를 넣고 있지만 id 같은 경우 적어놓지 않아도 알아서 들어갔으면 좋겠다!
         // id 값 삭제 -> 2개의 인자값만 가지는 생성자 만들어주기
         Restaurant restaurant = new Restaurant("BeRyong", "Busan");
