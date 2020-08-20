@@ -44,7 +44,7 @@ public class RestaurantController {
         // 이 둘은 외부에서 얻어올 것.
         String name = resource.getName();
         String address = resource.getAddress();
-        Restaurant restaurant = new Restaurant(1234L, name, address);
+        Restaurant restaurant = new Restaurant(name, address);
         restaurantService.addRestaurant(restaurant);
 
         URI location = new URI("/restaurants/" + restaurant.getId());
