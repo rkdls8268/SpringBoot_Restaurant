@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter // +) @Setter -> 모든 필드에 접근자와 설정자가 자동으로 생성.
+@Builder // 모델 객체를 생성할 때 Builder를 자동으로 추가해 줌. builder 패턴을 쉽게 적용할 수 있음.
+@NoArgsConstructor // 파라미터가 없는 기본 생성자를 생성
+@AllArgsConstructor // 모든 필드 값을 파라미터로 받는 생성자를 만들어 줌.
 public class Restaurant {
 
     @Id

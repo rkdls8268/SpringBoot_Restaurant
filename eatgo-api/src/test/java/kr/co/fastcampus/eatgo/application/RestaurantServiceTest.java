@@ -48,6 +48,7 @@ public class RestaurantServiceTest {
 
     private void MockRestaurantRepository() {
         List<Restaurant> restaurants = new ArrayList<>();
+        // builder 패턴
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
                 .name("Bob zip")
