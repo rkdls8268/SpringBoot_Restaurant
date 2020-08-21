@@ -1,5 +1,7 @@
 package kr.co.fastcampus.eatgo.domain;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Restaurant {
 
     @Id
@@ -15,15 +21,16 @@ public class Restaurant {
     private Long id;
 
     private String name;
+
     private String address;
 //    private Long id;
 
     @Transient
     private List<MenuItem> menuItems = new ArrayList<MenuItem>();
 
-    // 기본 생성자 생성해주면서 final 제거
-    public Restaurant() {
-    }
+//    // 기본 생성자 생성해주면서 final 제거
+//    public Restaurant() {
+//    }
 
     public Restaurant(String name, String address) {
         this.name = name;
@@ -41,25 +48,25 @@ public class Restaurant {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public String getAddress() {
+//        return address;
+//    }
 
     public String getInfo() {
         return name + " in " + address;
     }
 
-    public List<MenuItem> getMenuItems() {
-        return menuItems;
-    }
+//    public List<MenuItem> getMenuItems() {
+//        return menuItems;
+//    }
 
     public void addMenuItem(MenuItem menuItem) {
         menuItems.add(menuItem);
