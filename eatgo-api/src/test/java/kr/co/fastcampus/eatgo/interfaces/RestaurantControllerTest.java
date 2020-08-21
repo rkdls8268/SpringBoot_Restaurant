@@ -93,6 +93,11 @@ public class RestaurantControllerTest {
 
     @Test
     public void create() throws Exception {
+//        given(restaurantService.addRestaurant(ArgumentMatchers.any())).will(invocation -> {
+//            Restaurant restaurant = invocation.getArgument(0);
+//            return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
+//        });
+
         Restaurant restaurant = new Restaurant(1234L, "BeRyong", "Busan");
         mvc.perform(MockMvcRequestBuilders.post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
@@ -103,5 +108,15 @@ public class RestaurantControllerTest {
 
         verify(restaurantService).addRestaurant(ArgumentMatchers.any());
         // 제대로 된 객체만 넣으면 실행되게 처리
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"JOKER Bar\", \"address\": \"Busan\"}"))
+                .andExpect(status().isOk());
+
+        verify(restaurantService).updateRestaurant(1004L, "JOKER Bar", "Busan");
     }
 }
