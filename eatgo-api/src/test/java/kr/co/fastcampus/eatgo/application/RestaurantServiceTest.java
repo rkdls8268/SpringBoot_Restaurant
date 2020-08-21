@@ -42,7 +42,9 @@ public class RestaurantServiceTest {
 
     private void MockMenuItemRepository() {
         List<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem("Kimchi"));
+        menuItems.add(MenuItem.builder()
+                .name("Kimchi")
+                .build());
         given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
     }
 
@@ -51,8 +53,9 @@ public class RestaurantServiceTest {
         // builder 패턴
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .address("Seoul")
                 .name("Bob zip")
-                .menuItems(new ArrayList<>())
+//                .menuItems(new ArrayList<>())
                 .build();
 //        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
         restaurants.add(restaurant);
@@ -80,12 +83,25 @@ public class RestaurantServiceTest {
 
     @Test
     public void addRestaurants() { // 강의에는 addRestaurant라고 되어 있음.
+        given(restaurantRepository.save(any())).will(invocation -> {
+            Restaurant restaurant = invocation.getArgument(0);
+            restaurant.setId(1234L);
+            return restaurant;
+        });
+
         // 임의로 데이터를 넣고 있지만 id 같은 경우 적어놓지 않아도 알아서 들어갔으면 좋겠다!
         // id 값 삭제 -> 2개의 인자값만 가지는 생성자 만들어주기
-        Restaurant restaurant = new Restaurant("BeRyong", "Busan");
-        Restaurant saved = new Restaurant(1234L,"BeRyong", "Busan");
+        Restaurant restaurant = Restaurant.builder()
+                .name("BeRyong")
+                .address("Busan")
+                .build();
 
-        given(restaurantRepository.save(any())).willReturn(saved);
+        // saved 는 개선 여지가 보임,,! will(invocaton => {}) 으로 바꿈 아래 코드는 삭제해도 됨.
+//        Restaurant saved = Restaurant.builder()
+//                .id(1234L)
+//                .name("BeRyong")
+//                .address("Busan")
+//                .build();
 
         Restaurant created = restaurantService.addRestaurant(restaurant);
         assertThat(created.getId(), is(1234L));
@@ -93,7 +109,11 @@ public class RestaurantServiceTest {
 
     @Test
     public void updateRestaurant() {
-        Restaurant restaurant = new Restaurant(1004L, "Bobzip", "Seoul");
+        Restaurant restaurant = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
 
         given(restaurantRepository.findById(1004L))
                 .willReturn(Optional.of(restaurant));

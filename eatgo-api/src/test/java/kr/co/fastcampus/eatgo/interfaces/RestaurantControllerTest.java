@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.any;
@@ -47,7 +48,11 @@ public class RestaurantControllerTest {
     @Test
     public void list() throws Exception { // perform 에 대한 예외처리
         List<Restaurant> restaurants = new ArrayList<>();
-        restaurants.add(new Restaurant(1004L, "Bob zip", "Seoul"));
+        restaurants.add(Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build());
         given(restaurantService.getRestaurants()).willReturn(restaurants);
         // JUnit5 에서는 이렇게 해줘야함...?
 //        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/restaurants");
@@ -63,9 +68,20 @@ public class RestaurantControllerTest {
 
     @Test
     public void detail() throws Exception {
-        Restaurant restaurant1 = new Restaurant(1004L, "Bob zip", "Seoul");
-        restaurant1.addMenuItem(new MenuItem("Kimchi"));
-        Restaurant restaurant2 = new Restaurant(2020L, "Cyber food", "Seoul");
+        Restaurant restaurant1 = Restaurant.builder()
+                .id(1004L)
+                .name("Bob zip")
+                .address("Seoul")
+                .build();
+        MenuItem menuItem = MenuItem.builder()
+                .name("Kimchi")
+                .build();
+        restaurant1.setMenuItems(Arrays.asList(menuItem));
+        Restaurant restaurant2 = Restaurant.builder()
+                .id(2020L)
+                .name("Cyber food")
+                .address("Seoul")
+                .build();
         given(restaurantService.getRestaurantById(1004L)).willReturn(restaurant1);
         given(restaurantService.getRestaurantById(2020L)).willReturn(restaurant2);
 
@@ -98,7 +114,11 @@ public class RestaurantControllerTest {
 //            return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
 //        });
 
-        Restaurant restaurant = new Restaurant(1234L, "BeRyong", "Busan");
+        Restaurant restaurant = Restaurant.builder()
+                .id(1234L)
+                .name("BeRyong")
+                .address("Busan")
+                .build();
         mvc.perform(MockMvcRequestBuilders.post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
                 .content("{\"name\":\"BeRyong\", \"address\":\"Busan\"}"))
