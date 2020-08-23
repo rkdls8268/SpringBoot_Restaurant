@@ -108,7 +108,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void create() throws Exception {
+    public void createWithValidData() throws Exception {
 //        given(restaurantService.addRestaurant(ArgumentMatchers.any())).will(invocation -> {
 //            Restaurant restaurant = invocation.getArgument(0);
 //            return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
@@ -131,7 +131,15 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void update() throws Exception {
+    public void createWithInvalidData() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
+                .content("{\"name\":\"\", \"address\":\"\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateWithValidData() throws Exception {
         mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"JOKER Bar\", \"address\": \"Busan\"}"))
@@ -139,4 +147,20 @@ public class RestaurantControllerTest {
 
         verify(restaurantService).updateRestaurant(1004L, "JOKER Bar", "Busan");
     }
+
+    @Test
+    public void updateWithInvalidData() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\": \"\", \"address\": \"\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+//    @Test
+//    public void updateWithoutName() throws Exception {
+//        mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"name\": \"\", \"address\": \"Busan\"}"))
+//                .andExpect(status().isBadRequest());
+//    }
 }
