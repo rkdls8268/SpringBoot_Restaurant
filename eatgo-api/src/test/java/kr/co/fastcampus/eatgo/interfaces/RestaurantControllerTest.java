@@ -67,7 +67,7 @@ public class RestaurantControllerTest {
     }
 
     @Test
-    public void detail() throws Exception {
+    public void detailWithExisted() throws Exception {
         Restaurant restaurant1 = Restaurant.builder()
                 .id(1004L)
                 .name("Bob zip")
@@ -105,6 +105,15 @@ public class RestaurantControllerTest {
                 .andExpect(content().string(
                         containsString("\"name\":\"Cyber food\"")
                 ));
+    }
+
+    @Test
+    public void detailWithNotExisted() throws Exception {
+        given(restaurantService.getRestaurantById(404L))
+                .willThrow(new RestaurantNotFoundException(404L));
+        mvc.perform(MockMvcRequestBuilders.get("/restaurants/404"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("{}"));
     }
 
     @Test
