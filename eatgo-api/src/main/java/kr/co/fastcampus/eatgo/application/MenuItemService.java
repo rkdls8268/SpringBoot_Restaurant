@@ -23,9 +23,20 @@ public class MenuItemService {
     public void bulkUpdate(Long restaurantId, List<MenuItem> menuItems) {
         // 실제 데이터를 넣어준다.
         for (MenuItem menuItem : menuItems) {
-            menuItem.setRestaurantId(restaurantId);
-            menuItemRepository.save(menuItem);
+            update(restaurantId, menuItem);
         }
 //        MenuItem menuItem = MenuItem.builder().build();
+    }
+
+    // bulkUpdate() 와 분리
+    public void update(Long restaurantId, MenuItem menuItem) {
+        // 삭제 여부 확인
+        if (menuItem.isDestroy()) {
+            menuItemRepository.deleteById(menuItem.getId());
+            return;
+        }
+        // 아닌 경우에는 추가
+        menuItem.setRestaurantId(restaurantId);
+        menuItemRepository.save(menuItem);
     }
 }
