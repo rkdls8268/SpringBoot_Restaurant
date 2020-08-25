@@ -10,16 +10,17 @@ import java.util.List;
 @Service
 public class RestaurantService {
 
-    @Autowired
     private RestaurantRepository restaurantRepository;
+    private MenuItemRepository menuItemRepository;
+    private ReviewRepository reviewRepository;
 
     @Autowired
-    private MenuItemRepository menuItemRepository;
-
     public RestaurantService(RestaurantRepository restaurantRepository,
-                             MenuItemRepository menuItemRepository) {
+                             MenuItemRepository menuItemRepository,
+                             ReviewRepository reviewRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     public Restaurant getRestaurantById(Long id) {
@@ -30,6 +31,11 @@ public class RestaurantService {
         List<MenuItem> menuItems = menuItemRepository.findAllByRestaurantId(id);
         // 메뉴 아이템 추가
         restaurant.setMenuItems(menuItems);
+
+        List<Review> reviews = reviewRepository.findAllByRestaurantId(id);
+
+        // 실제로 일어나야 하는 일은 아래처럼 처리: 리뷰 작성
+        restaurant.setReviews(reviews);
 
         return restaurant;
     }

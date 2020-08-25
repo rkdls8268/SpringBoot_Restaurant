@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -34,7 +35,7 @@ public class ReviewControllerTests {
 
     @Test
     public void createWithValidAttributes() throws Exception{
-        given(reviewService.addReview(any())).willReturn(
+        given(reviewService.addReview(eq(1L), any())).willReturn(
             Review.builder()
                     .id(1004L)
                     .name("Gain")
@@ -49,7 +50,7 @@ public class ReviewControllerTests {
                 .andExpect(header().string("location", "/restaurants/1/reviews/1004"));
                 // location 에서 데이터 값이 제대로 잘 들어갔는지 url 확인
 
-        verify(reviewService).addReview(ArgumentMatchers.any());
+        verify(reviewService).addReview(eq(1L), ArgumentMatchers.any());
     }
 
     @Test
@@ -60,6 +61,6 @@ public class ReviewControllerTests {
                 .andExpect(status().isBadRequest());
 
         // 한번도 호출이 안되게끔 하기 위해 never() 사용
-        verify(reviewService, never()).addReview(ArgumentMatchers.any());
+        verify(reviewService, never()).addReview(eq(1L), ArgumentMatchers.any());
     }
 }

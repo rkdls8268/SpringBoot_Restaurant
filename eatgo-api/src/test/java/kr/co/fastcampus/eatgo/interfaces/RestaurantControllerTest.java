@@ -35,16 +35,6 @@ public class RestaurantControllerTest {
     @MockBean
     private RestaurantService restaurantService;
 
-    // 아래의 코드를 Mock Object로 수정해줄 것.
-//    @SpyBean(RestaurantService.class)
-//    private RestaurantService restaurantService;
-//
-//    @SpyBean(RestaurantRepositoryImpl.class)
-//    private RestaurantRepository restaurantRepository;
-//
-//    @SpyBean(MenuItemRepositoryImpl.class)
-//    private MenuItemRepository menuItemRepository;
-
     @Test
     public void list() throws Exception { // perform 에 대한 예외처리
         List<Restaurant> restaurants = new ArrayList<>();
@@ -68,7 +58,7 @@ public class RestaurantControllerTest {
 
     @Test
     public void detailWithExisted() throws Exception {
-        Restaurant restaurant1 = Restaurant.builder()
+        Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
                 .name("Bob zip")
                 .address("Seoul")
@@ -76,14 +66,22 @@ public class RestaurantControllerTest {
         MenuItem menuItem = MenuItem.builder()
                 .name("Kimchi")
                 .build();
-        restaurant1.setMenuItems(Arrays.asList(menuItem));
-        Restaurant restaurant2 = Restaurant.builder()
-                .id(2020L)
-                .name("Cyber food")
-                .address("Seoul")
+        restaurant.setMenuItems(Arrays.asList(menuItem));
+
+        Review review = Review.builder()
+                .name("Gain")
+                .score(5)
+                .description("great")
                 .build();
-        given(restaurantService.getRestaurantById(1004L)).willReturn(restaurant1);
-        given(restaurantService.getRestaurantById(2020L)).willReturn(restaurant2);
+
+        restaurant.setReviews(Arrays.asList(review));
+//        Restaurant restaurant2 = Restaurant.builder()
+//                .id(2020L)
+//                .name("Cyber food")
+//                .address("Seoul")
+//                .build();
+        given(restaurantService.getRestaurantById(1004L)).willReturn(restaurant);
+//        given(restaurantService.getRestaurantById(2020L)).willReturn(restaurant2);
 
         mvc.perform(MockMvcRequestBuilders.get("/restaurants/1004")) // 요청하는 api
                 .andExpect(status().isOk())
@@ -95,16 +93,19 @@ public class RestaurantControllerTest {
                 ))
                 .andExpect(content().string(
                         containsString("Kimchi")
-                ));
-
-        mvc.perform(MockMvcRequestBuilders.get("/restaurants/2020")) // 요청하는 api
-                .andExpect(status().isOk())
-                .andExpect(content().string(
-                        containsString("\"id\":2020")
                 ))
                 .andExpect(content().string(
-                        containsString("\"name\":\"Cyber food\"")
+                        containsString("great")
                 ));
+
+//        mvc.perform(MockMvcRequestBuilders.get("/restaurants/2020")) // 요청하는 api
+//                .andExpect(status().isOk())
+//                .andExpect(content().string(
+//                        containsString("\"id\":2020")
+//                ))
+//                .andExpect(content().string(
+//                        containsString("\"name\":\"Cyber food\"")
+//                ));
     }
 
     @Test

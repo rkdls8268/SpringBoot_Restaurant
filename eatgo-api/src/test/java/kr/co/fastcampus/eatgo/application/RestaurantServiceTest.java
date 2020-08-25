@@ -14,7 +14,9 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 // 일반적인 테스트에서는 의존 관계 주입 못함.
 // 직접 이 레스토랑 서비스가 repository를 연결할 수 있도록 만들어줘야 함.
@@ -28,6 +30,9 @@ public class RestaurantServiceTest {
     @Mock
     private MenuItemRepository menuItemRepository;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
     @BeforeEach // JUnit5에서 @Before 대신 사용: 모든 테스트를 사용하기 전에 한 번씩 사용해라!
     public void setUp() {
 //        restaurantRepository = new RestaurantRepositoryImpl();
@@ -37,7 +42,8 @@ public class RestaurantServiceTest {
 
         MockRestaurantRepository();
         MockMenuItemRepository();
-        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository);
+        MockReviewRepository();
+        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, reviewRepository);
     }
 
     private void MockMenuItemRepository() {
@@ -66,12 +72,32 @@ public class RestaurantServiceTest {
         given(restaurantRepository.save(any())).willReturn(restaurant);
     }
 
+    private void MockReviewRepository() {
+        List<Review> reviews = new ArrayList<>();
+        reviews.add(Review.builder()
+            .name("BeRyong")
+            .score(1)
+            .description("Bad")
+            .build());
+
+        given(reviewRepository.findAllByRestaurantId(1004L))
+                .willReturn(reviews);
+    }
+
     @Test
     public void getRestaurantWithExisted() {
         Restaurant restaurant = restaurantService.getRestaurantById(1004L);
+
+        // 상세 페이지에서 실행 
+        verify(menuItemRepository).findAllByRestaurantId(eq(1004L));
+        verify(reviewRepository).findAllByRestaurantId(eq(1004L));
+
         assertThat(restaurant.getId(), is(1004L));
         MenuItem menuItem = restaurant.getMenuItems().get(0);
         assertThat(menuItem.getName(), is("Kimchi"));
+
+        Review review = restaurant.getReviews().get(0);
+        assertThat(review.getDescription(), is("Bad"));
     }
 
     @Test

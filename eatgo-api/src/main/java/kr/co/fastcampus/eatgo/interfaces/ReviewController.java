@@ -24,7 +24,7 @@ public class ReviewController {
             @PathVariable("restaurantId") Long restaurantId,
             @Valid @RequestBody Review resource
     ) throws URISyntaxException {
-        Review review = reviewService.addReview(resource);
+        Review review = reviewService.addReview(restaurantId, resource);
 
         // 주소를 만들어주고 받는 것 까지 실행
         // 이 때 @RequestBody 에서 받은 review.getId() 를 하면 받는 게 없기 때문에 null 값이 넘어옴
