@@ -35,31 +35,4 @@ public class RestaurantController {
         return restaurant;
     }
 
-    /*
-    * 입력 시 content로 넘겨준 내용을 @RequestBody 이용하여 받을 수 있음.
-    * */
-
-    @PostMapping("/restaurants")
-    public ResponseEntity<?> create(@Valid @RequestBody Restaurant resource) throws URISyntaxException {
-        // 이 둘은 외부에서 얻어올 것.
-        Restaurant restaurant = Restaurant.builder()
-                .name(resource.getName())
-                .address(resource.getAddress())
-                .build();
-        restaurantService.addRestaurant(restaurant);
-
-//        URI location = new URI("/restaurants/" + restaurant.getId());
-        URI location = new URI("/restaurants/1234");
-
-        return ResponseEntity.created(location).body("{}");
-    }
-
-    @PatchMapping("/restaurants/{id}")
-    public String update(@PathVariable("id") Long id,
-                         @Valid @RequestBody Restaurant resource) {
-        String name = resource.getName();
-        String address = resource.getAddress();
-        restaurantService.updateRestaurant(id, name, address);
-        return "{}";
-    }
 }

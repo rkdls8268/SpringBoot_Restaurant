@@ -76,13 +76,8 @@ public class RestaurantControllerTest {
                 .build();
 
         restaurant.setReviews(Arrays.asList(review));
-//        Restaurant restaurant2 = Restaurant.builder()
-//                .id(2020L)
-//                .name("Cyber food")
-//                .address("Seoul")
-//                .build();
+
         given(restaurantService.getRestaurantById(1004L)).willReturn(restaurant);
-//        given(restaurantService.getRestaurantById(2020L)).willReturn(restaurant2);
 
         mvc.perform(MockMvcRequestBuilders.get("/restaurants/1004")) // 요청하는 api
                 .andExpect(status().isOk())
@@ -98,15 +93,6 @@ public class RestaurantControllerTest {
                 .andExpect(content().string(
                         containsString("great")
                 ));
-
-//        mvc.perform(MockMvcRequestBuilders.get("/restaurants/2020")) // 요청하는 api
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(
-//                        containsString("\"id\":2020")
-//                ))
-//                .andExpect(content().string(
-//                        containsString("\"name\":\"Cyber food\"")
-//                ));
     }
 
     @Test
@@ -117,61 +103,4 @@ public class RestaurantControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("{}"));
     }
-
-    @Test
-    public void createWithValidData() throws Exception {
-//        given(restaurantService.addRestaurant(ArgumentMatchers.any())).will(invocation -> {
-//            Restaurant restaurant = invocation.getArgument(0);
-//            return new Restaurant(1234L, restaurant.getName(), restaurant.getAddress());
-//        });
-
-        Restaurant restaurant = Restaurant.builder()
-                .id(1234L)
-                .name("BeRyong")
-                .address("Busan")
-                .build();
-        mvc.perform(MockMvcRequestBuilders.post("/restaurants")
-                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
-                .content("{\"name\":\"BeRyong\", \"address\":\"Busan\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/restaurants/1234"))
-                .andExpect(content().string("{}"));
-
-        verify(restaurantService).addRestaurant(ArgumentMatchers.any());
-        // 제대로 된 객체만 넣으면 실행되게 처리
-    }
-
-    @Test
-    public void createWithInvalidData() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/restaurants")
-                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
-                .content("{\"name\":\"\", \"address\":\"\"}"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void updateWithValidData() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"JOKER Bar\", \"address\": \"Busan\"}"))
-                .andExpect(status().isOk());
-
-        verify(restaurantService).updateRestaurant(1004L, "JOKER Bar", "Busan");
-    }
-
-    @Test
-    public void updateWithInvalidData() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"\", \"address\": \"\"}"))
-                .andExpect(status().isBadRequest());
-    }
-
-//    @Test
-//    public void updateWithoutName() throws Exception {
-//        mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\"name\": \"\", \"address\": \"Busan\"}"))
-//                .andExpect(status().isBadRequest());
-//    }
 }
