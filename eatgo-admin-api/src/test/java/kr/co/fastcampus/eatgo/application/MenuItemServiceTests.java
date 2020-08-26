@@ -10,9 +10,12 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -27,6 +30,24 @@ class MenuItemServiceTests {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         menuItemService = new MenuItemService(menuItemRepository); // before 에서 해주기
+    }
+
+    // 실제로 목록만 얻는 작업도 처리해주기
+    @Test
+    public void getMenuItems() {
+
+        // setUp() 에서 처리하는 방법이 있고 가짜객체로 넣어주게끔 이름을 짓는 방법이 있다. 아래는 후자
+        List<MenuItem> mockMenuItems = new ArrayList<>();
+        mockMenuItems.add(MenuItem.builder()
+                .name("Kimchi").build());
+
+        given(menuItemRepository.findAllByRestaurantId(1004L))
+                .willReturn(mockMenuItems);
+
+        List<MenuItem> menuItems = menuItemService.getMenuItems(1004L);
+
+        MenuItem menuItem = menuItems.get(0);
+        assertThat(menuItem.getName(), is("Kimchi"));
     }
 
     @Test

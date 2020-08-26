@@ -11,16 +11,12 @@ import java.util.List;
 public class RestaurantService {
 
     private RestaurantRepository restaurantRepository;
-    private MenuItemRepository menuItemRepository;
-    private ReviewRepository reviewRepository;
+    // Test 에서 menuItem 과 Review 관련 코드를 모두 삭제해주었으므로 각각의 repository 도 필요 없음
 
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository,
-                             MenuItemRepository menuItemRepository,
-                             ReviewRepository reviewRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
-        this.menuItemRepository = menuItemRepository;
-        this.reviewRepository = reviewRepository;
+
     }
 
     public Restaurant getRestaurantById(Long id) {
@@ -28,14 +24,7 @@ public class RestaurantService {
                 .orElseThrow(() -> new RestaurantNotFoundException(id));
         // 여기 들어올 때마다 예외처리 해줘야 하기 때문에 람다로 처리
 
-        List<MenuItem> menuItems = menuItemRepository.findAllByRestaurantId(id);
-        // 메뉴 아이템 추가
-        restaurant.setMenuItems(menuItems);
-
-        List<Review> reviews = reviewRepository.findAllByRestaurantId(id);
-
-        // 실제로 일어나야 하는 일은 아래처럼 처리: 리뷰 작성
-        restaurant.setReviews(reviews);
+        // 메뉴 아이템 추가와 리뷰 작성하는 처리 삭제
 
         return restaurant;
     }

@@ -6,6 +6,7 @@ import kr.co.fastcampus.eatgo.domain.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +19,15 @@ public class MenuItemService {
     @Autowired // 위에 해줘도 되고 밑에 해줘도 됨! 두 가지 방식이 있음
     public MenuItemService(MenuItemRepository menuItemRepository) {
         this.menuItemRepository = menuItemRepository;
+    }
+
+    public List<MenuItem> getMenuItems(Long restaurantId) {
+//        List<MenuItem> menuItems = new ArrayList<>();
+//        menuItems.add(MenuItem.builder()
+//                .name("Kimchi").build());
+        // 위 내용이 가짜 객체를 만들어주는 곳에 넣어주면 됨.
+
+        return menuItemRepository.findAllByRestaurantId(restaurantId);
     }
 
     public void bulkUpdate(Long restaurantId, List<MenuItem> menuItems) {

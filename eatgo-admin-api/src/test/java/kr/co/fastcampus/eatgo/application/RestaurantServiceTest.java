@@ -27,11 +27,7 @@ public class RestaurantServiceTest {
     @Mock
     private RestaurantRepository restaurantRepository;
 
-    @Mock
-    private MenuItemRepository menuItemRepository;
-
-    @Mock
-    private ReviewRepository reviewRepository;
+    // 여기서도 mocking 한 메뉴아이템, 리뷰 repository 삭제
 
     @BeforeEach // JUnit5에서 @Before 대신 사용: 모든 테스트를 사용하기 전에 한 번씩 사용해라!
     public void setUp() {
@@ -41,17 +37,7 @@ public class RestaurantServiceTest {
         // Mock 어노테이션이 붙어있는 것에 올바르게 객체를 선언해 줌.
 
         MockRestaurantRepository();
-        MockMenuItemRepository();
-        MockReviewRepository();
-        restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, reviewRepository);
-    }
-
-    private void MockMenuItemRepository() {
-        List<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(MenuItem.builder()
-                .name("Kimchi")
-                .build());
-        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
+        restaurantService = new RestaurantService(restaurantRepository);
     }
 
     private void MockRestaurantRepository() {
@@ -61,9 +47,7 @@ public class RestaurantServiceTest {
                 .id(1004L)
                 .address("Seoul")
                 .name("Bob zip")
-//                .menuItems(new ArrayList<>())
                 .build();
-//        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
         restaurants.add(restaurant);
         given(restaurantRepository.findAll()).willReturn(restaurants);
 
@@ -72,32 +56,13 @@ public class RestaurantServiceTest {
         given(restaurantRepository.save(any())).willReturn(restaurant);
     }
 
-    private void MockReviewRepository() {
-        List<Review> reviews = new ArrayList<>();
-        reviews.add(Review.builder()
-            .name("BeRyong")
-            .score(1)
-            .description("Bad")
-            .build());
-
-        given(reviewRepository.findAllByRestaurantId(1004L))
-                .willReturn(reviews);
-    }
-
     @Test
     public void getRestaurantWithExisted() {
         Restaurant restaurant = restaurantService.getRestaurantById(1004L);
 
-        // 상세 페이지에서 실행 
-        verify(menuItemRepository).findAllByRestaurantId(eq(1004L));
-        verify(reviewRepository).findAllByRestaurantId(eq(1004L));
+        // menuItem 과 review 관련 코드 모두 삭제, 이를 확인하는 assertThat 코드도 삭제
 
         assertThat(restaurant.getId(), is(1004L));
-        MenuItem menuItem = restaurant.getMenuItems().get(0);
-        assertThat(menuItem.getName(), is("Kimchi"));
-
-        Review review = restaurant.getReviews().get(0);
-        assertThat(review.getDescription(), is("Bad"));
     }
 
     @Test
