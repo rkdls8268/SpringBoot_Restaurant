@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension .class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(RegionController.class)
 public class RegionControllerTests {
 
