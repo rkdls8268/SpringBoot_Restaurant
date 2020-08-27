@@ -44,10 +44,11 @@ public class RestaurantControllerTest {
                 .name("Bob zip")
                 .address("Seoul")
                 .build());
-        given(restaurantService.getRestaurants()).willReturn(restaurants);
+        given(restaurantService.getRestaurants("Seoul"))
+                .willReturn(restaurants);
         // JUnit5 에서는 이렇게 해줘야함...?
 //        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/restaurants");
-        mvc.perform(MockMvcRequestBuilders.get("/restaurants"))
+        mvc.perform(MockMvcRequestBuilders.get("/restaurants?region=Seoul"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"id\":1004")
