@@ -10,12 +10,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 class CategoryServiceTests {
 
@@ -41,15 +38,6 @@ class CategoryServiceTests {
         List<Category> categories = categoryService.getCategories();
 
         Category category = categories.get(0);
-
-        assertThat(category.getName(), is("Korean"));
-    }
-
-    @Test
-    public void addCategory() {
-        Category category = categoryService.addCategory("Korean");
-
-        verify(categoryRepository).save(any());
 
         assertThat(category.getName(), is("Korean"));
     }

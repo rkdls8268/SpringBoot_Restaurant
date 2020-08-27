@@ -22,10 +22,4 @@ public class CategoryService {
         return categories;
     }
 
-    public Category addCategory(String name) {
-        Category category = Category.builder()
-                .name("Korean").build();
-        categoryRepository.save(category);
-        return category;
-    }
 }
