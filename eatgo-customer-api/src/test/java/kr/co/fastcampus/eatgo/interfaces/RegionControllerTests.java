@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -44,20 +43,6 @@ public class RegionControllerTests {
         mvc.perform(MockMvcRequestBuilders.get("/regions"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Seoul")));
-    }
-
-    @Test
-    public void create() throws Exception {
-        Region region = Region.builder().name("Seoul").build();
-        given(regionService.addRegion("Seoul")).willReturn(region);
-
-        mvc.perform(MockMvcRequestBuilders.post("/regions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Seoul\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("{}"));
-
-        verify(regionService).addRegion("Seoul");
     }
 
 }
