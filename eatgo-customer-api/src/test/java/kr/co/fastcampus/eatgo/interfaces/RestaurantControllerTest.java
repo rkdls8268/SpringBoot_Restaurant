@@ -41,14 +41,15 @@ public class RestaurantControllerTest {
         List<Restaurant> restaurants = new ArrayList<>();
         restaurants.add(Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build());
-        given(restaurantService.getRestaurants("Seoul"))
+        given(restaurantService.getRestaurants("Seoul", 1L))
                 .willReturn(restaurants);
         // JUnit5 에서는 이렇게 해줘야함...?
 //        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/restaurants");
-        mvc.perform(MockMvcRequestBuilders.get("/restaurants?region=Seoul"))
+        mvc.perform(MockMvcRequestBuilders.get("/restaurants?region=Seoul&category=1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"id\":1004")
@@ -62,6 +63,7 @@ public class RestaurantControllerTest {
     public void detailWithExisted() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build();

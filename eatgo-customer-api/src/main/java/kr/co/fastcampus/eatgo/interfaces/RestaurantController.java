@@ -17,10 +17,12 @@ public class RestaurantController {
 
     @GetMapping("/restaurants")
     public List<Restaurant> list(
-            @RequestParam("region") String region
+            @RequestParam("region") String region,
+            @RequestParam("category") Long categoryId
     ) {
 //        String region = "Seoul";
-        List<Restaurant> restaurants = restaurantService.getRestaurants(region);
+//        long categoryId = 1L;
+        List<Restaurant> restaurants = restaurantService.getRestaurants(region, categoryId);
 
         return restaurants;
     }

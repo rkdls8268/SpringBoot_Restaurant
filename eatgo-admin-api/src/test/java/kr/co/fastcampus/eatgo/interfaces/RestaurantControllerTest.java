@@ -40,6 +40,7 @@ public class RestaurantControllerTest {
         List<Restaurant> restaurants = new ArrayList<>();
         restaurants.add(Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build());
@@ -60,6 +61,7 @@ public class RestaurantControllerTest {
     public void detailWithExisted() throws Exception {
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .name("Bob zip")
                 .address("Seoul")
                 .build();
@@ -96,12 +98,13 @@ public class RestaurantControllerTest {
 
         Restaurant restaurant = Restaurant.builder()
                 .id(1234L)
+                .categoryId(1L)
                 .name("BeRyong")
                 .address("Busan")
                 .build();
         mvc.perform(MockMvcRequestBuilders.post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
-                .content("{\"name\":\"BeRyong\", \"address\":\"Busan\"}"))
+                .content("{\"categoryId\": 1, \"name\":\"BeRyong\", \"address\":\"Busan\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/restaurants/1234"))
                 .andExpect(content().string("{}"));
@@ -114,7 +117,7 @@ public class RestaurantControllerTest {
     public void createWithInvalidData() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
-                .content("{\"name\":\"\", \"address\":\"\"}"))
+                .content("{\"categoryId\": 1, \"name\":\"\", \"address\":\"\"}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -122,7 +125,7 @@ public class RestaurantControllerTest {
     public void updateWithValidData() throws Exception {
         mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"JOKER Bar\", \"address\": \"Busan\"}"))
+                .content("{\"categoryId\": 1, \"name\": \"JOKER Bar\", \"address\": \"Busan\"}"))
                 .andExpect(status().isOk());
 
         verify(restaurantService).updateRestaurant(1004L, "JOKER Bar", "Busan");
@@ -132,7 +135,7 @@ public class RestaurantControllerTest {
     public void updateWithInvalidData() throws Exception {
         mvc.perform(MockMvcRequestBuilders.patch("/restaurants/1004")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"\", \"address\": \"\"}"))
+                .content("{\"categoryId\": 1, \"name\": \"\", \"address\": \"\"}"))
                 .andExpect(status().isBadRequest());
     }
 

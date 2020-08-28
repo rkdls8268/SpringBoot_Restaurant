@@ -46,30 +46,31 @@ public class RestaurantServiceTest {
         restaurantService = new RestaurantService(restaurantRepository, menuItemRepository, reviewRepository);
     }
 
-    private void MockMenuItemRepository() {
-        List<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(MenuItem.builder()
-                .name("Kimchi")
-                .build());
-        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
-    }
-
     private void MockRestaurantRepository() {
         List<Restaurant> restaurants = new ArrayList<>();
         // builder 패턴
         Restaurant restaurant = Restaurant.builder()
                 .id(1004L)
+                .categoryId(1L)
                 .address("Seoul")
                 .name("Bob zip")
 //                .menuItems(new ArrayList<>())
                 .build();
 //        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
         restaurants.add(restaurant);
-        given(restaurantRepository.findAllByAddressContaining("Seoul")).willReturn(restaurants);
+        given(restaurantRepository.findAllByAddressContainingAndCategoryId("Seoul", 1L)).willReturn(restaurants);
 
         given(restaurantRepository.findById(1004L)).willReturn(Optional.of(restaurant));
 
         given(restaurantRepository.save(any())).willReturn(restaurant);
+    }
+
+    private void MockMenuItemRepository() {
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(MenuItem.builder()
+                .name("Kimchi")
+                .build());
+        given(menuItemRepository.findAllByRestaurantId(1004L)).willReturn(menuItems);
     }
 
     private void MockReviewRepository() {
@@ -110,7 +111,8 @@ public class RestaurantServiceTest {
     @Test
     public void getRestaurants() {
         String region = "Seoul";
-        List<Restaurant> restaurants = restaurantService.getRestaurants(region);
+        long categoryId = 1L;
+        List<Restaurant> restaurants = restaurantService.getRestaurants(region, categoryId);
         Restaurant restaurant = restaurants.get(0);
         assertThat(restaurant.getId(), is(1004L));
     }

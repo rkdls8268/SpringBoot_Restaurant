@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class Restaurant {
     @GeneratedValue
     @Setter
     private Long id;
+
+    // categoryId도 같이 넣어서 만들도록 강제
+    @NotNull
+    private Long categoryId;
 
     @NotEmpty
     private String name;
