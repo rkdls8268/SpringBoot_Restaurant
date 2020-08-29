@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -66,6 +67,29 @@ class UserControllerTests {
                 .andExpect(status().isCreated());
 
         verify(userService).addUser(email, name);
+    }
+
+    @Test
+    public void update() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.patch("/users/1004")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"admin@example.com\"," +
+                        " \"name\":\"admin\", \"level\":300}"))
+                .andExpect(status().isOk());
+
+        Long id = 1004L;
+        String email = "admin@example.com";
+        String name = "admin";
+        Long level = 300L;
+
+//        User user = User.builder()
+//                .id(id)
+//                .email(email)
+//                .name(name)
+//                .build();
+//        given(userService.updateUser(id, email, name, level)).willReturn(user);
+
+        verify(userService).updateUser(eq(id), eq(email), eq(name), eq(level));
     }
 
 }

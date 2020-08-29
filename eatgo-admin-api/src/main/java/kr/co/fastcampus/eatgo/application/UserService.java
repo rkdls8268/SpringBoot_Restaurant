@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,5 +36,18 @@ public class UserService {
                 .name(name)
                 .build();
         return userRepository.save(user);
+    }
+
+    public User updateUser(Long id, String email, String name, Long level) {
+        // TODO: restaurantService 의 예외처리 참고
+        User user = userRepository.findById(id).orElse(null);
+
+        // 실제로는 정보를 변경할 때 email 확인을 하는 경우가 많기 때문에 이런식으로 처리를 하지는 않음.
+        // 우선은 이메일도 변경 가능하게 해줌
+        user.setEmail(email);
+        user.setName(name);
+        user.setLevel(level);
+        // 실제로 user 로 활용이 되려면 orElse() 사용
+        return user;
     }
 }

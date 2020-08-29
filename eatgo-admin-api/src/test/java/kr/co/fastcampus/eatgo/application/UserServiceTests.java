@@ -7,14 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 class UserServiceTests {
 
@@ -61,4 +63,27 @@ class UserServiceTests {
         assertThat(user.getName(), is(name));
     }
 
+    @Test
+    public void updateUser() {
+        Long id = 1004L;
+        String email = "admin@example.com";
+        String name = "Superman"; // 원래는 admin 이었다가 변경 시킬 name
+        Long level = 300L;
+
+        User mockUser = User.builder()
+                .id(id)
+                .email(email)
+                .name("admin")
+                .level(1L).build();
+        given(userRepository.findById(id)).willReturn(Optional.of(mockUser));
+        // RestaurantServiceTests 에서도 이렇게 작성하고 repository 에 메서드 추가해주었는데 오류 안남
+        // 왜 여기서는 repository 에 메서드 지워줘야 오류가 안날까?
+
+        User user = userService.updateUser(id, email, name, level);
+
+        verify(userRepository).findById(eq(id));
+
+        assertThat(user.getName(), is("Superman"));
+        assertThat(user.isAdmin(), is(true));
+    }
 }
