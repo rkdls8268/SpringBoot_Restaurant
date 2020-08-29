@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +45,27 @@ class UserControllerTests {
         mvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("tester")));
+    }
+
+    @Test
+    public void create() throws Exception {
+        // 회원가입과는 다름. 주로 가게 업소 사장님들의 계정을 만들어주거나
+        // 관리자를 만들어 줄 때 주로 사용
+        String email = "admin@example.com";
+        String name = "admin";
+
+        User user = User.builder()
+                .email(email)
+                .name(name)
+                .build();
+        given(userService.addUser(email, name)).willReturn(user);
+
+        mvc.perform(MockMvcRequestBuilders.post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"admin@example.com\", \"name\":\"admin\"}"))
+                .andExpect(status().isCreated());
+
+        verify(userService).addUser(email, name);
     }
 
 }
