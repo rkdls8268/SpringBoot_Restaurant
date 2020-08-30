@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,6 +33,7 @@ public class UserService {
         User user = User.builder()
                 .email(email)
                 .name(name)
+                .level(1L)
                 .build();
         return userRepository.save(user);
     }
@@ -48,6 +48,13 @@ public class UserService {
         user.setName(name);
         user.setLevel(level);
         // 실제로 user 로 활용이 되려면 orElse() 사용
+        return user;
+    }
+
+    public User deleteUser(Long id) {
+        // TODO: 실제로 작업 처리
+        User user = userRepository.findById(id).orElse(null);
+        user.deactivate();
         return user;
     }
 }

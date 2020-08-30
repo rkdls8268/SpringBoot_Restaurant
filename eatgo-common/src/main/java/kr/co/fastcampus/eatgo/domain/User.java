@@ -32,4 +32,13 @@ public class User {
     public boolean isAdmin() {
         return level >= 300;
     }
+
+    public boolean isActive() {
+        return level > 0;
+    }
+
+    public void deactivate() {
+        //TODO: deactivate 처리
+        level = 0L;
+    }
 }

@@ -86,4 +86,26 @@ class UserServiceTests {
         assertThat(user.getName(), is("Superman"));
         assertThat(user.isAdmin(), is(true));
     }
+
+    @Test
+    public void deleteUser() {
+        Long id = 1004L;
+        String email = "admin@example.com";
+        String name = "admin"; // 원래는 admin 이었다가 변경 시킬 name
+        Long level = 300L;
+
+        User mockUser = User.builder()
+                .id(id)
+                .email(email)
+                .name("admin")
+                .level(1L).build();
+        given(userRepository.findById(id)).willReturn(Optional.of(mockUser));
+
+        User user = userService.deleteUser(1004L);
+
+        verify(userRepository).findById(1004L);
+
+        assertThat(user.isAdmin(), is(false));
+        assertThat(user.isActive(), is(false));
+    }
 }

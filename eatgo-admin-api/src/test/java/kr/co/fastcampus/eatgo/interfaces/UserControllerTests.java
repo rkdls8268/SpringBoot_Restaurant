@@ -92,4 +92,12 @@ class UserControllerTests {
         verify(userService).updateUser(eq(id), eq(email), eq(name), eq(level));
     }
 
+    @Test
+    public void delete() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/users/1004"))
+                .andExpect(status().isOk());
+
+        verify(userService).deleteUser(1004L);
+    }
+
 }
