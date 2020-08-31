@@ -21,7 +21,7 @@ class UserTests {
         assertThat(user.isActive(), is(true));
 
         user.deactivate();
+        assertThat(user.isActive(), is(false));
 
-        assertThat(user.isActive(), is(false));    }
-
+    }
 }

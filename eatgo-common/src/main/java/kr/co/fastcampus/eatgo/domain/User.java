@@ -38,7 +38,6 @@ public class User {
     }
 
     public void deactivate() {
-        //TODO: deactivate 처리
         level = 0L;
     }
 }

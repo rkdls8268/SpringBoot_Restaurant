@@ -71,6 +71,7 @@ class UserControllerTests {
 
     @Test
     public void update() throws Exception {
+        // update 의 경우 builder() 안해줘도 되나?
         mvc.perform(MockMvcRequestBuilders.patch("/users/1004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"email\":\"admin@example.com\"," +
@@ -81,13 +82,6 @@ class UserControllerTests {
         String email = "admin@example.com";
         String name = "admin";
         Long level = 300L;
-
-//        User user = User.builder()
-//                .id(id)
-//                .email(email)
-//                .name(name)
-//                .build();
-//        given(userService.updateUser(id, email, name, level)).willReturn(user);
 
         verify(userService).updateUser(eq(id), eq(email), eq(name), eq(level));
     }
