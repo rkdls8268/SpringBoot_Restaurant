@@ -16,9 +16,13 @@ public class UserService {
 
     UserRepository userRepository;
 
+    // 얘도 mock 객체로 만들어준다. 의존성 주입 받기
+    PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerUser(String email, String name, String password) {
@@ -27,7 +31,6 @@ public class UserService {
             throw new EmailExistedException(email);
         }
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(password);
 
         User user = User.builder()
@@ -37,12 +40,17 @@ public class UserService {
                 .level(1L)
                 .build();
 
-        userRepository.save(user);
-        return null;
+        return userRepository.save(user);
     }
 
     public User authenticate(String email, String password) {
-        // TODO: 구현
-        return null;
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmailNotExistedException(email));
+
+        // 사용자가 입력한 비밀번호와 인코딩된 비밀번호가 매치하는지를 알려줌
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new PasswordWrongException();
+        }
+        return user;
     }
 }
