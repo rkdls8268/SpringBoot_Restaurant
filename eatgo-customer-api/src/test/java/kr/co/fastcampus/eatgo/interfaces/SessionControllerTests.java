@@ -37,12 +37,17 @@ public class SessionControllerTests {
 
     @Test
     public void createWithValidAttributes() throws Exception{
+        User mockUser = User.builder()
+                .password("ACCESSTOKEN")
+                .build();
+        given(userService.authenticate("tester@example.com", "test"))
+                .willReturn(mockUser);
         mvc.perform(MockMvcRequestBuilders.post("/session")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
                 .content("{\"email\":\"tester@example.com\", \"password\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/session"))
-                .andExpect(content().string("{\"accessToken\":\"ACCESSTOKEN\"}"));
+                .andExpect(content().string("{\"accessToken\":\"ACCESSTOKE\"}"));
 
         verify(userService).authenticate(eq("tester@example.com"), eq("test"));
     }
