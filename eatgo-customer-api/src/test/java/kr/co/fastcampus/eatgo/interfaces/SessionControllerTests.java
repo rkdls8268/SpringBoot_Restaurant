@@ -1,5 +1,7 @@
 package kr.co.fastcampus.eatgo.interfaces;
 
+import kr.co.fastcampus.eatgo.application.EmailNotExistedException;
+import kr.co.fastcampus.eatgo.application.PasswordWrongException;
 import kr.co.fastcampus.eatgo.application.ReviewService;
 import kr.co.fastcampus.eatgo.application.UserService;
 import kr.co.fastcampus.eatgo.domain.Review;
@@ -34,14 +36,40 @@ public class SessionControllerTests {
     private UserService userService;
 
     @Test
-    public void create() throws Exception{
+    public void createWithValidAttributes() throws Exception{
         mvc.perform(MockMvcRequestBuilders.post("/session")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
-                .content("{\"email\":\"tester@example.com\", \"name\":\"tester\", \"password\":\"test\"}"))
+                .content("{\"email\":\"tester@example.com\", \"password\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/session"))
                 .andExpect(content().string("{\"accessToken\":\"ACCESSTOKEN\"}"));
 
         verify(userService).authenticate(eq("tester@example.com"), eq("test"));
+    }
+
+    @Test
+    public void createWithNotExistedEmail() throws Exception{
+        // 실패하는 모양 만들어주기; given() 안해주면 badRequest() 안 나옴
+        given(userService.authenticate("x@example.com", "test"))
+                .willThrow(EmailNotExistedException.class);
+        mvc.perform(MockMvcRequestBuilders.post("/session")
+                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
+                .content("{\"email\":\"x@example.com\", \"password\":\"test\"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(userService).authenticate(eq("x@example.com"), eq("test"));
+    }
+
+    @Test
+    public void createWithWrongPassword() throws Exception{
+        // 실패하는 모양 만들어주기; given() 안해주면 badRequest() 안 나옴
+        given(userService.authenticate("tester@example.com", "x"))
+                .willThrow(PasswordWrongException.class);
+        mvc.perform(MockMvcRequestBuilders.post("/session")
+                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
+                .content("{\"email\":\"tester@example.com\", \"password\":\"x\"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(userService).authenticate(eq("tester@example.com"), eq("x"));
     }
 }

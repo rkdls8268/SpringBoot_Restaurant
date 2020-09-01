@@ -41,7 +41,8 @@ public class UserService {
         return null;
     }
 
-    public void authenticate(String email, String password) {
+    public User authenticate(String email, String password) {
         // TODO: 구현
+        return null;
     }
 }
