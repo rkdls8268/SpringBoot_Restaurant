@@ -1,4 +1,4 @@
-package kr.co.fastcampus.eatgo.application;
+package kr.co.fastcampus.eatgo.interfaces;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 // 순수하게 데이터만 가지고 있으므로
 @Data
 @Builder
-public class SessionDto {
+public class SessionResponseDto {
 
     private String accessToken;
 }
