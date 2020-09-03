@@ -6,6 +6,7 @@ import kr.co.fastcampus.eatgo.application.ReviewService;
 import kr.co.fastcampus.eatgo.application.UserService;
 import kr.co.fastcampus.eatgo.domain.Review;
 import kr.co.fastcampus.eatgo.domain.User;
+import kr.co.fastcampus.eatgo.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -32,13 +34,23 @@ public class SessionControllerTests {
     @Autowired
     MockMvc mvc;
 
+//    @Autowired
+//    private JwtUtil jwtUtil; // jwt 를 만들고 이를 다시 받은 것을 원래 데이터로 돌려주는 역할. common 에 추가해줄것.
+    // 실제로 이를 활용하기 위해 sessionController로 가자
+    // mock을 안할것이기 때문에 사실 여기서는 선언해줄 필요 없음
+
     @MockBean
     private UserService userService;
 
     @Test
     public void createWithValidAttributes() throws Exception{
+        // password 말고 id와 이름을 잡아주자.
+//        User mockUser = User.builder()
+//                .password("ACCESSTOKEN")
+//                .build();
         User mockUser = User.builder()
-                .password("ACCESSTOKEN")
+                .id(1004L)
+                .name("tester")
                 .build();
         given(userService.authenticate("tester@example.com", "test"))
                 .willReturn(mockUser);
@@ -47,7 +59,8 @@ public class SessionControllerTests {
                 .content("{\"email\":\"tester@example.com\", \"password\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/session"))
-                .andExpect(content().string("{\"accessToken\":\"ACCESSTOKE\"}"));
+                .andExpect(content().string(containsString("{\"accessToken\":")))
+                .andExpect(content().string(containsString(".")));
 
         verify(userService).authenticate(eq("tester@example.com"), eq("test"));
     }
