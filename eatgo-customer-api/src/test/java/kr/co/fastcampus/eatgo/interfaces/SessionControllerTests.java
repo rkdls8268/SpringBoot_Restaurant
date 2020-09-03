@@ -39,6 +39,10 @@ public class SessionControllerTests {
     // 실제로 이를 활용하기 위해 sessionController로 가자
     // mock을 안할것이기 때문에 사실 여기서는 선언해줄 필요 없음
 
+    // 가짜 객체로 우리가 원하는 토큰 값 넘겨주기
+    @MockBean
+    private JwtUtil jwtUtil;
+
     @MockBean
     private UserService userService;
 
@@ -54,13 +58,16 @@ public class SessionControllerTests {
                 .build();
         given(userService.authenticate("tester@example.com", "test"))
                 .willReturn(mockUser);
+
+        given(jwtUtil.createToken(1004L, "tester"))
+                .willReturn("header.payload.signature");
+
         mvc.perform(MockMvcRequestBuilders.post("/session")
                 .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
                 .content("{\"email\":\"tester@example.com\", \"password\":\"test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/session"))
-                .andExpect(content().string(containsString("{\"accessToken\":")))
-                .andExpect(content().string(containsString(".")));
+                .andExpect(content().string(containsString("{\"accessToken\":\"header.payload.signature\"}")));
 
         verify(userService).authenticate(eq("tester@example.com"), eq("test"));
     }

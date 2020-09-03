@@ -9,10 +9,10 @@ class JwtUtilTests {
 
     @Test
     public void createToken() {
-        JwtUtil jwtUtil = new JwtUtil();
+        String secret = "12345678901234567890123456789012";
+        JwtUtil jwtUtil = new JwtUtil(secret);
         String token = jwtUtil.createToken(1004L, "John"); // 사용자 id와 이름을 토큰에 넣어줄 것이므로 인자값 주기.
 
         assertThat(token, containsString(".")); // token에 마침표 포함되므로 . 포함하는지 확인
     }
-
 }
