@@ -3,7 +3,6 @@ package kr.co.fastcampus.eatgo.application;
 import kr.co.fastcampus.eatgo.domain.User;
 import kr.co.fastcampus.eatgo.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,21 +24,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(String email, String name, String password) {
-        Optional<User> existed = userRepository.findByEmail(email);
-        if (existed.isPresent()) {
-            throw new EmailExistedException(email);
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EmailNotExistedException(email));
+
+        // 사용자가 입력한 비밀번호와 인코딩된 비밀번호가 매치하는지를 알려줌
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new PasswordWrongException();
         }
-
-        String encodedPassword = passwordEncoder.encode(password);
-
-        User user = User.builder()
-                .email(email)
-                .name(name)
-                .password(encodedPassword)
-                .level(1L)
-                .build();
-
-        return userRepository.save(user);
+        return user;
     }
 }
