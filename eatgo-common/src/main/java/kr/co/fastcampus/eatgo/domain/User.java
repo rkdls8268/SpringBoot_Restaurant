@@ -32,6 +32,9 @@ public class User {
 
     private String password;
 
+    // 가게 정보 넣어주기
+    private Long restaurantId;
+
     public boolean isAdmin() {
         return level >= 300;
     }
@@ -42,6 +45,16 @@ public class User {
 
     public void deactivate() {
         level = 0L;
+    }
+
+    // setRestaurantId 를 따로 만들어주었다.
+    public void setRestaurantId(Long restaurantId) {
+        this.level = 50L;
+        this.restaurantId = restaurantId;
+    }
+
+    public boolean isRestaurantOwner() {
+        return level == 50L;
     }
 
     // jwt를 사용하면 getAccessToken() 은 필요 없음.

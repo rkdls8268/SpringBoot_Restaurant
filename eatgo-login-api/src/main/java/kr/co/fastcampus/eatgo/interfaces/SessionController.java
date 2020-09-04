@@ -33,7 +33,8 @@ public class SessionController {
 //        String accessToken = user.getAccessToken();
 
         // JwtUtil 의 createToken() 사용
-        String accessToken = jwtUtil.createToken(user.getId(), user.getName());
+        String accessToken = jwtUtil.createToken(user.getId(), user.getName(),
+                user.isRestaurantOwner() ? user.getRestaurantId() : null);
 
         String url = "/session";
         SessionResponseDto sessionResponseDto = SessionResponseDto.builder()

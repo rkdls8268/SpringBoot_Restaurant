@@ -21,7 +21,7 @@ class JwtUtilTests {
 
     @Test
     public void createToken() {
-        String token = jwtUtil.createToken(1004L, "John"); // 사용자 id와 이름을 토큰에 넣어줄 것이므로 인자값 주기.
+        String token = jwtUtil.createToken(1004L, "John", null); // 사용자 id와 이름을 토큰에 넣어줄 것이므로 인자값 주기.
 
         assertThat(token, containsString(".")); // token에 마침표 포함되므로 . 포함하는지 확인
     }

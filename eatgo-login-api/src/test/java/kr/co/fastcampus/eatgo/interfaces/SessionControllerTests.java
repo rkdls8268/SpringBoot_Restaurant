@@ -7,7 +7,6 @@ import kr.co.fastcampus.eatgo.domain.User;
 import kr.co.fastcampus.eatgo.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +20,6 @@ import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,11 +51,36 @@ public class SessionControllerTests {
         User mockUser = User.builder()
                 .id(1004L)
                 .name("tester")
+                .level(1L)
                 .build();
         given(userService.authenticate("tester@example.com", "test"))
                 .willReturn(mockUser);
 
-        given(jwtUtil.createToken(1004L, "tester"))
+        given(jwtUtil.createToken(1004L, "tester", null))
+                .willReturn("header.payload.signature");
+
+        mvc.perform(MockMvcRequestBuilders.post("/session")
+                .contentType(MediaType.APPLICATION_JSON) // 이 내용이 JSON 타입이라는 것을 알려줌.
+                .content("{\"email\":\"tester@example.com\", \"password\":\"test\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "/session"))
+                .andExpect(content().string(containsString("{\"accessToken\":\"header.payload.signature\"}")));
+
+        verify(userService).authenticate(eq("tester@example.com"), eq("test"));
+    }
+
+    @Test
+    public void createRestaurantOwner() throws Exception{
+        User mockUser = User.builder()
+                .id(1004L)
+                .name("tester")
+                .level(50L)
+                .restaurantId(369L)
+                .build();
+        given(userService.authenticate("tester@example.com", "test"))
+                .willReturn(mockUser);
+
+        given(jwtUtil.createToken(1004L, "tester", 369L))
                 .willReturn("header.payload.signature");
 
         mvc.perform(MockMvcRequestBuilders.post("/session")
