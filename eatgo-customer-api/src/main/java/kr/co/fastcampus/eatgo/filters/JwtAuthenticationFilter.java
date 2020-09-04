@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if (authentication != null) {
             // authentication 을 실제로 잡아주는 것이 필요함
             SecurityContext context = SecurityContextHolder.getContext();
+            // 여기서 authentication 을 세팅했기 때문에 이것을 그대로 얻어서 ReviewController 에서 사용
             context.setAuthentication(authentication);
         }
         // 있냐 없냐랑 상관없이 doFilter 는 항상 실행

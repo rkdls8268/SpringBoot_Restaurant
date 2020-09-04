@@ -26,11 +26,11 @@ class ReviewServiceTests {
     @Test
     public void addReview() {
         Review review = Review.builder()
-                .name("Gain")
+                .name("John")
                 .score(3)
                 .description("tastes good~")
                 .build();
-        reviewService.addReview(1004L, review);
+        reviewService.addReview(1004L, "John", 3, "tastes good~");
 
         verify(reviewRepository).save(any());
     }

@@ -24,7 +24,7 @@ public class Review {
     @Setter
     private Long restaurantId;
 
-    @NotEmpty
+//    @NotEmpty
     private String name;
 
     // max 는 이 변수의 최댓값, min 은 이 변수의 최솟값
