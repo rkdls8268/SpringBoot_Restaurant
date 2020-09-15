@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -20,6 +21,8 @@ public class Reservation {
     @GeneratedValue
     private Long id;
 
+    private Long restaurantId;
+
     private Long userId;
 
     private String name;
@@ -31,5 +34,6 @@ public class Reservation {
     private String time;
 
     @NotNull
+    @Min(1) // 최소 인원 추가해주는 예외처리할 때 사용 가능
     private Integer partySize;
 }

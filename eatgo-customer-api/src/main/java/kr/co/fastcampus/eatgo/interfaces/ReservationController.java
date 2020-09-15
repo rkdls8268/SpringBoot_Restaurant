@@ -6,14 +6,13 @@ import kr.co.fastcampus.eatgo.domain.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@CrossOrigin
 @RestController
 public class ReservationController {
 
@@ -24,20 +23,22 @@ public class ReservationController {
     public ResponseEntity<?> create(
             Authentication authentication,
             @PathVariable Long restaurantId,
-            @RequestBody Reservation resource
+            @Valid @RequestBody Reservation resource
+            // @Valid 를 넣어줬으므로 예외처리 코드도 추가해주자.
     ) throws URISyntaxException {
         Claims claims = (Claims) authentication.getPrincipal();
 
         // userId 와 name 은 토큰값에 포함되어 있으므로 토큰값에서 가져오기
         Long userId = claims.get("userId", Long.class);
         String name = claims.get("name", String.class);
+        System.out.println(userId + name);
 
         String date = resource.getDate();
         String time = resource.getTime();
         Integer partySize = resource.getPartySize();
 
-        reservationService.addReservation(restaurantId, userId, name, date, time, partySize);
-        String url = "/restaurants/" + restaurantId + "/reservations/1";
+        Reservation reservation = reservationService.addReservation(restaurantId, userId, name, date, time, partySize);
+        String url = "/restaurants/" + restaurantId + "/reservations/" + reservation.getId();
         return ResponseEntity.created(new URI(url)).body("{}");
     }
 }
