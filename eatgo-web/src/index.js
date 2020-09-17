@@ -7,11 +7,11 @@
     element.innerHTML = `
         ${restaurants.map(restaurant => `
                 <p>
-                    ${restaurants[0].id}
-                    ${restaurants[0].name}
-                    ${restaurants[0].address}
+                    ${restaurants.id}
+                    ${restaurants.name}
+                    ${restaurants.address}
                 </p>
         `).join('')}
 //    JSON.stringify(restaurants);
     `;
-});
+})();

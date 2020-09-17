@@ -15,7 +15,7 @@ services:
       timeout: 10s
       retries: 10
   login-api:
-    image: openjdk:8
+    image: library/openjdk:14
     env_file: .env
     volumes:
       - ./run.sh:/home/eatgo/run.sh
@@ -26,7 +26,7 @@ services:
       - mysql
     command: bash -c "cd /home/eatgo && sh run.sh"
   admin-api:
-    image: openjdk:8
+    image: library/openjdk:14
     env_file: .env
     volumes:
       - ./run.sh:/home/eatgo/run.sh
@@ -37,7 +37,7 @@ services:
       - mysql
     command: bash -c "cd /home/eatgo && sh run.sh"
   customer-api:
-    image: openjdk:8
+    image: library/openjdk:14
     env_file: .env
     volumes:
       - ./run.sh:/home/eatgo/run.sh
@@ -48,7 +48,7 @@ services:
       - mysql
     command: bash -c "cd /home/eatgo && sh run.sh"
   restaurant-api:
-    image: openjdk:8
+    image: library/openjdk:14
     env_file: .env
     volumes:
       - ./run.sh:/home/eatgo/run.sh
